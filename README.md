@@ -21,6 +21,6 @@ This library was developed in the Platform IO, therefore there is -> #include <A
 
 #TO-DO
 
--> Rest of Unit Tests
--> DES and 3DES working with blocks bigger than 8-bit
--> AES CBC mode not working correctly
+- Rest of Unit Tests
+- DES and 3DES working with blocks bigger than 8-bit
+- AES CBC mode not working correctly
