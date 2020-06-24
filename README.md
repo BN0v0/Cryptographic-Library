@@ -15,7 +15,7 @@ Every Algorithm is composed by two encryption modes: ECB (Electronic CodeBook) a
 Some Examples of how to use the library are in the Examples folder.
 Unit Tests in the Tests folder. 
 
-
+Working on Arduino and WEMOS/ESP.
 This library was developed in the Platform IO, therefore there is -> #include <Arduino.h>.
 
 
