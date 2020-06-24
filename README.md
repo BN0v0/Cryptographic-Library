@@ -1,4 +1,4 @@
-#Cryptographic Library 
+# Cryptographic Library 
 
 Simple and user friendly C++ library built to embedded systems and IoT devices. This library was primarly idealized to work with resource contrained IoT devices. 
 
@@ -19,7 +19,7 @@ Unit Tests in the Tests folder.
 This library was developed in the Platform IO, therefore there is -> #include <Arduino.h>.
 
 
-#TO-DO
+# TO-DO
 
 - Rest of Unit Tests
 - DES and 3DES working with blocks bigger than 8-bit
