@@ -18,9 +18,3 @@ Unit Tests in the Tests folder.
 Working on Arduino and WEMOS/ESP.
 This library was developed in the Platform IO, therefore there is -> #include <Arduino.h>.
 
-
-# TO-DO
-
-- Rest of Unit Tests
-- DES and 3DES working with blocks bigger than 8-bit
-- AES CBC mode not working correctly
