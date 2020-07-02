@@ -46,7 +46,7 @@ public:
          * @param user_key is the user key to use in the encryption and decryption
          * @param IV is only used in the CBC encryption mode -> In ECB use nullptr
         */
-        void Initialize(int mode, byte* user_key, byte* IV);
+        void Initialize(int mode, byte* user_key,int key_size, byte* IV);
 
         /* Encryption AES
         * @param output of the encryption operation
@@ -78,6 +78,7 @@ private:
     byte iv_ecb_dec[16];//16bytes
     byte* IVE;
     byte* IVD;
+    int KeySize;
 
 
     //Key & IV Operations 

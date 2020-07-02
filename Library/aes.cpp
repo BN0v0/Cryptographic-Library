@@ -208,11 +208,12 @@ bool AES::Decryption(byte *cipher,int size_c,byte *plain,byte *key, int bits, by
 
 /* Public Functions */
 
-void AES::Initialize(int mode ,byte* user_key, byte* user_iv){
+void AES::Initialize(int mode ,byte* user_key , int key_size, byte* user_iv){
          
         byte defaultIV[] = {0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
         Mode =mode;
         Key=user_key;
+        KeySize = key_size;
         
         if(Mode == CBC){
           memcpy(iv_ecb_enc,defaultIV,16);
@@ -236,12 +237,12 @@ int AES::Encryption(byte* output, byte* input){
   switch (Mode)
   {
     case ECB:
-        result = Encryption(input,16,output,Key,128,iv_ecb_enc);
+        result = Encryption(input,16,output,Key,KeySize,iv_ecb_enc);
         return result;
       break;
     case CBC:
         xor_block(input,IVE);
-        result = Encryption(input,16,output,Key,128,iv_ecb_enc);
+        result = Encryption(input,16,output,Key,KeySize,iv_ecb_enc);
         return result;
       break;
     
@@ -256,16 +257,17 @@ int AES::Encryption(byte* output, byte* input){
 
 int AES::Decryption(byte* output, byte* input){
   bool result;
+  
  switch (Mode)
   {
   case ECB:
-      result =Decryption(input,16,output,Key,128,iv_ecb_dec);
+      result =Decryption(input,16,output,Key,KeySize,iv_ecb_dec);
       return result;
     break;
   
   case CBC:
   
-      result = Decryption(input,16,output,Key,128,iv_ecb_dec);
+      result = Decryption(input,16,output,Key,KeySize,iv_ecb_dec);
       xor_block(output,IVD);
       return result;
     break;
