@@ -216,14 +216,15 @@ void AES::Initialize(int mode ,byte* user_key , int key_size, byte* user_iv){
         KeySize = key_size;
         
         if(Mode == CBC){
+          IVE = user_iv;
+          IVD = user_iv;
           memcpy(iv_ecb_enc,defaultIV,16);
           memcpy(iv_ecb_dec,defaultIV,16);
           memcpy(iv_cbc_enc,defaultIV,16);
           memcpy(iv_cbc_dec,defaultIV,16);
           memcpy(iv_cbc_enc,&user_iv,16);
           memcpy(iv_cbc_dec,&user_iv,16);
-          IVE = iv_cbc_enc;
-          IVD = iv_cbc_dec;
+       
            
         }else if(Mode == ECB){
        
@@ -240,7 +241,7 @@ int AES::Encryption(byte* output, byte* input){
         result = Encryption(input,16,output,Key,KeySize,iv_ecb_enc);
         return result;
       break;
-    case CBC:
+    case CBC: 
         xor_block(input,IVE);
         result = Encryption(input,16,output,Key,KeySize,iv_ecb_enc);
         return result;
@@ -270,7 +271,7 @@ int AES::Decryption(byte* output, byte* input){
       result = Decryption(input,16,output,Key,KeySize,iv_ecb_dec);
       xor_block(output,IVD);
       return result;
-    break;
+    break; 
   
   default:
     return ERROR;
