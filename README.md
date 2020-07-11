@@ -1,6 +1,6 @@
 To Help me continue developing some open source projects, buy me a beer, it is easy !
 
-<a class="bmc-button" target="_blank" href="https://www.buymeacoffee.com/bnovo"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a Beer"><span style="margin-left:5px;font-size:19px !important;">Buy me a Beer</span></a>
+<a href="https://www.buymeacoffee.com/bnovo" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy Me A Bear" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
 
 # Cryptographic Library 
 
