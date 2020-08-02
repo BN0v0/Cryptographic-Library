@@ -28,11 +28,4 @@ You can do it by clonning this repository.
 ## Issues 
 Any detected issue, please report it!
 
-## Support this Work and others
-If you like and want to support this kind of work, please support it, and buy me a beer.
-Click the following  image:
-
- <a href="https://www.buymeacoffee.com/techontheline" target="_blank" style="text-decoration: none;">
-        <img src="https://i.imgur.com/xkeS95o.png" alt="Buy Me A Beer" style="display: block;margin-left: auto; margin-right: auto; margin-top: 5px;" >
- </a>
 
