@@ -1,6 +1,6 @@
-#include <data.h>
-#include <avr/pgmspace.h>
+#include <Blowfish/blowfish.h>
 
+/* Permutation Operations */
 static const Word p_perm[18] PROGMEM = {
         0x243F6A88,0x85A308D3,0x13198A2E,0x03707344,0xA4093822,0x299F31D0,0x082EFA98,
         0xEC4E6C89,0x452821E6,0x38D01377,0xBE5466CF,0x34E90C6C,0xC0AC29B7,0xC97C50DD,
@@ -139,3 +139,209 @@ static const Word s_perm[4][256] PROGMEM = { {
                                              0x53113EC0,0x1640E3D3,0x38ABBD60,0x2547ADF0,0xBA38209C,0xF746CE76,0x77AFA1C5,0x20756060,
                                              0x85CBFE4E,0x8AE88DD8,0x7AAAF9B0,0x4CF9AA7E,0x1948C25C,0x02FB8A8C,0x01C36AE4,0xD6EBE1F9,
                                              0x90D4F869,0xA65CDEA0,0x3F09252D,0xC208E69F,0xB74E6132,0xCE77E25B,0x578FDFE3,0x3AC372E6} };
+
+
+void Blowfish_Alg::encrypt(byte in[], byte out[], blowfish_key *keystruct)
+{
+
+    byte an[8];
+    for (size_t i = 0; i < 8; i++)
+    {
+        /* code */
+        an[i] = in[i + 8];
+    }
+
+    Word l, r, t;
+
+    SwL(l, in);
+    SwR(r, in);
+
+    ITERATION(l, r, t, 0);
+    ITERATION(l, r, t, 1);
+    ITERATION(l, r, t, 2);
+    ITERATION(l, r, t, 3);
+    ITERATION(l, r, t, 4);
+    ITERATION(l, r, t, 5);
+    ITERATION(l, r, t, 6);
+    ITERATION(l, r, t, 7);
+    ITERATION(l, r, t, 8);
+    ITERATION(l, r, t, 9);
+    ITERATION(l, r, t, 10);
+    ITERATION(l, r, t, 11);
+    ITERATION(l, r, t, 12);
+    ITERATION(l, r, t, 13);
+    ITERATION(l, r, t, 14);
+    l ^= keystruct->p[15];
+    F(l, t);
+    r ^= t; //Last iteration has no swap()
+    r ^= keystruct->p[16];
+    l ^= keystruct->p[17];
+
+    out[0] = l >> 24;
+    out[1] = l >> 16;
+    out[2] = l >> 8;
+    out[3] = l;
+    out[4] = r >> 24;
+    out[5] = r >> 16;
+    out[6] = r >> 8;
+    out[7] = r;
+}
+
+void Blowfish_Alg::decrypt(byte in[], byte out[], blowfish_key *keystruct)
+{
+    Word l, r, t;
+    byte an[8];
+    for (size_t i = 0; i < 8; i++)
+    {
+        /* code */
+        an[i] = in[i + 8];
+    }
+
+    SwL(l, in);
+    SwR(r, in);
+
+    ITERATION(l, r, t, 17);
+    ITERATION(l, r, t, 16);
+    ITERATION(l, r, t, 15);
+    ITERATION(l, r, t, 14);
+    ITERATION(l, r, t, 13);
+    ITERATION(l, r, t, 12);
+    ITERATION(l, r, t, 11);
+    ITERATION(l, r, t, 10);
+    ITERATION(l, r, t, 9);
+    ITERATION(l, r, t, 8);
+    ITERATION(l, r, t, 7);
+    ITERATION(l, r, t, 6);
+    ITERATION(l, r, t, 5);
+    ITERATION(l, r, t, 4);
+    ITERATION(l, r, t, 3);
+    l ^= keystruct->p[2];
+    F(l, t);
+    r ^= t; //Last iteration has no swap()
+    r ^= keystruct->p[1];
+    l ^= keystruct->p[0];
+
+    out[0] = l >> 24;
+    out[1] = l >> 16;
+    out[2] = l >> 8;
+    out[3] = l;
+    out[4] = r >> 24;
+    out[5] = r >> 16;
+    out[6] = r >> 8;
+    out[7] = r;
+}
+
+void Blowfish_Alg::key_setup(byte *user_key, blowfish_key *keystruct, size_t len)
+{
+    byte block[8];
+    int idx, idx2;
+
+    // Copy over the constant init array vals (so the originals aren't destroyed).
+    memcpy(keystruct->p, p_perm, sizeof(Word) * 18);
+    memcpy(keystruct->s, s_perm, sizeof(Word) * 1024);
+
+    // Combine the key with the P box. Assume key is standard 448 bits (56 bytes) or less.
+    for (idx = 0, idx2 = 0; idx < 18; ++idx, idx2 += 4)
+        keystruct->p[idx] ^= (user_key[idx2 % len] << 24) | (user_key[(idx2 + 1) % len] << 16) | (user_key[(idx2 + 2) % len] << 8) | (user_key[(idx2 + 3) % len]);
+    // Re-calculate the P box.
+    memset(block, 0, 8);
+    for (idx = 0; idx < 18; idx += 2)
+    {
+        encrypt(block, block, keystruct);
+        keystruct->p[idx] = (block[0] << 24) | (block[1] << 16) | (block[2] << 8) | block[3];
+        keystruct->p[idx + 1] = (block[4] << 24) | (block[5] << 16) | (block[6] << 8) | block[7];
+    }
+    // Recalculate the S-boxes.
+    for (idx = 0; idx < 4; ++idx)
+    {
+        for (idx2 = 0; idx2 < 256; idx2 += 2)
+        {
+            encrypt(block, block, keystruct);
+            keystruct->s[idx][idx2] = (block[0] << 24) | (block[1] << 16) |
+                                      (block[2] << 8) | block[3];
+            keystruct->s[idx][idx2 + 1] = (block[4] << 24) | (block[5] << 16) |
+                                          (block[6] << 8) | block[7];
+        }
+    }
+}
+
+//XOR Operations
+static void xor_block(byte *d, byte *s)
+{
+
+    for (byte i = 0; i < 8; i++)
+    {
+        d[i] = d[i] ^ s[i];
+    }
+}
+
+void Blowfish_Alg::Initialize(int mode, byte *iv_user)
+{
+
+    Mode = mode;
+
+    if (Mode == CBC)
+    {
+        memcpy(iv_enc, iv_user, 8);
+        memcpy(iv_dec, iv_user, 8);
+        IVE = iv_enc;
+        IVD = iv_dec;
+    }
+}
+
+bool Blowfish_Alg::KeySchedule(byte* user_key)
+{
+    int len=8;
+    keystruct = new blowfish_key();
+    key_setup(user_key, keystruct, len);
+}
+
+int Blowfish_Alg::Encryption(byte in[], byte out[])
+{
+    switch (Mode)
+    {
+    case ECB:
+        /* code */
+        encrypt(in, out, keystruct);
+        encrypt(&in[8], &out[8], keystruct);
+        break;
+    case CBC:
+        /* code */
+        xor_block(in, IVE);
+        encrypt(in, out, keystruct);
+        xor_block(&in[8], out);
+        encrypt(&in[8], &out[8], keystruct);
+        break;
+
+    default:
+        return ERROR;
+        break;
+    }
+}
+
+int Blowfish_Alg::Decryption(byte in[], byte out[])
+{
+    switch (Mode)
+    {
+    case ECB:
+        /* code */
+        decrypt(in, out, keystruct);
+        decrypt(&in[8], &out[8], keystruct);
+        break;
+    case CBC:
+        /* code */
+        decrypt(in, out, keystruct);
+        xor_block(out, IVE);
+        decrypt(&in[8], &out[8], keystruct);
+        xor_block(&out[8], in);
+        break;
+
+    default:
+        return ERROR;
+        break;
+    }
+}
+
+
+
+

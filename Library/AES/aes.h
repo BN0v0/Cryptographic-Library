@@ -6,9 +6,8 @@
 #include <math.h>
 #include <stdint.h>
 #include <string.h>
-#include <data.h>
 #include <avr/pgmspace.h>
-#include <cstdlib>
+#include <Crypto_Help.cpp>
 
 
 //defining 
@@ -27,7 +26,7 @@
 #define f2(x)  ((x) & 0x80 ? (x << 1) ^ WPOLY : x << 1)
 #define d2(x)  (((x) >> 1) ^ ((x) & 1 ? DPOLY : 0))
 
-class AES
+class AES_Alg
 {
 public:
         /* Initializing the AES algorithm 
@@ -35,21 +34,23 @@ public:
          * @param user_key is the user key to use in the encryption and decryption
          * @param IV is only used in the CBC encryption mode -> In ECB use nullptr
         */
-        void Initialize(int mode, byte* user_key,int key_size, byte* IV);
+        void Initialize(int mode,byte* IV);
 
+
+        bool KeySetup(byte *user_key);
         /* Encryption AES
         * @param output of the encryption operation
         * @param input, input byte array wich is pretended to be encrypted
         * @return is ERROR (-1) if is something wrong, SUCCESS (0) if the encryption is successfull or FAIL (1) if it Fails 
         */
-        int Encryption(byte* output, byte* input);
+        int Encryption(byte* input,byte* output);
 
         /* Encryption AES
         * @param output of the decryption operation
         * @param input, input byte array wich is pretended to be encrypted
         * @return is ERROR (-1) if is something wrong, SUCCESS (0) if the encryption is successfull or FAIL (1) if it Fails 
         */
-        int Decryption(byte* output, byte* input);
+        int Decryption(byte* input,byte* output);
        
 private:
 
