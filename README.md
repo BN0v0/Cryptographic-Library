@@ -12,14 +12,14 @@
 **Note** - It is worth notice that the most RAM consuming algorith (AES) only uses 2,27% of Arduino RAM resources and the most FLASH consuming algorithm (Blowfish) only uses 5% of Arduino available Flash resources.
 
 ## Desciption
-User-friendly C++ library built to embedded sytems and IoT devices. Built to ensure a level of security to IoT communications, specially to constrained IoT devices. This library includes the encryption algorithms as AES, DES, 3DES or TDES, Blowfish,RSA and includes HMAC with MD5 or SHA256, to sign the messages. 
+User-friendly C++ library built to embedded sytems and IoT devices. Built to ensure a level of security to IoT communications, specially to constrained IoT devices. This library includes the encryption algorithms as AES, DES, 3DES or TDES, Blowfish.
 All encryption algorithms include ECB (Electronic CodeBook) mode and CBC (Cipher-block chaining) in the encryption and decryption process, except RSA.
 
 ## Examples 
 You have some examples in the examples folders, that can help you using the algorithms.
 
 ## Tested
-This library has been tested with some test vectores. The Unit Tests are in the Tests folder. 
+This library has been tested with some test vectores.
 
 ## Contribution
 Everyone who is interested in contribuiting to this project are welcome!! 
