@@ -17,7 +17,7 @@ bool Crypto::Initialize(int Alg)
         aes = AES_Alg();
         aes.Initialize(ECB,nullptr);
         break;
-    case DES:
+    case DES: 
         Des = DES_Alg();
         Des.Initialize(des, ECB,nullptr);
         break;
