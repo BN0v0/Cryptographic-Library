@@ -13,7 +13,7 @@
 
 ## Desciption
 User-friendly C++ library built to embedded sytems and IoT devices. Built to ensure a level of security to IoT communications, specially to constrained IoT devices. This library includes the encryption algorithms as AES, DES, 3DES or TDES, Blowfish.
-All encryption algorithms include ECB (Electronic CodeBook) mode and CBC (Cipher-block chaining) in the encryption and decryption process, except RSA.
+All encryption algorithms include ECB (Electronic CodeBook) mode and CBC (Cipher-block chaining) in the encryption and decryption process.
 
 ## Examples 
 You have some examples in the examples folders, that can help you using the algorithms.
